@@ -4,7 +4,7 @@
 # @Time : 2021/5/11 9:12
 # @Software: PyCharm
 # @Brief:
-from tensorflow.keras import optimizers, callbacks, utils, applications
+from tensorflow.keras import optimizers, callbacks, applications
 from core.VOCdataset import VOCDataset
 from nets.FCN import *
 from core.losses import *
@@ -40,7 +40,8 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
                   loss=dice_loss,
                   metrics=[object_accuracy, object_miou, lr_info])
 
-    trainable_layer = 173
+    trainable_layer = 175   # resnet50
+    # trainable_layer = 19   # vgg16
     for i in range(trainable_layer):
         print(model.layers[i].name)
         model.layers[i].trainable = False

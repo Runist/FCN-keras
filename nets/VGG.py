@@ -6,6 +6,7 @@
 # @Brief: VGG作为Backbone的FCN网络
 
 from tensorflow.keras import layers, models
+from tensorflow.python.keras.utils import data_utils
 from nets.BilinearUpSampling import BilinearUpSampling2D
 import os
 
@@ -51,6 +52,9 @@ def VGG16_backbone(inputs):
 
     model = models.Model(inputs, x)
     weights_path = os.path.expanduser(os.path.join('~', '.keras/models/vgg16_weights_tf_dim_ordering_tf_kernels.h5'))
+    weights_path = data_utils.get_file(
+        weights_path,
+        'https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5')
     model.load_weights(weights_path, by_name=True, skip_mismatch=True)
 
     return [f1, f2, f3, f4, f5]
