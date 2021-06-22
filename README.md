@@ -29,7 +29,7 @@ pip installl -r requirements.txt
 4. Getting FCN weights.
 
 ```shell
-wget https://github.com/Runist/MAML-keras/releases/download/v0.1/fcn_weights.h5
+wget https://github.com/Runist/FCN-keras/releases/download/v0.1/fcn_weights.h5
 ```
 
 4. Run **predict.py**, you'll see the result of Fully Convolutional Networks.
