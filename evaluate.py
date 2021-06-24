@@ -16,7 +16,7 @@ import tensorflow as tf
 
 def evaluate(model, val_file_path, num_classes):
     """
-    评价FCN网络指标，主要是测试miou
+    评价FCN网络指标，测试miou
     :param model: 模型对象
     :param val_file_path: 验证集文件路径
     :param num_classes: 分类数量

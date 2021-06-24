@@ -43,7 +43,7 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
                   metrics=[object_accuracy, object_miou, lr_info])
 
     trainable_layer = 175   # resnet50
-    # trainable_layer = 19   # vgg16
+    # trainable_layer = 19    # vgg16
     for i in range(trainable_layer):
         print(model.layers[i].name)
         model.layers[i].trainable = False
