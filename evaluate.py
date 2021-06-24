@@ -41,7 +41,7 @@ def evaluate(model, val_file_path, num_classes):
         y_pred = np.squeeze(y_pred, axis=0)
         y_true = np.squeeze(y_true, axis=0).astype(np.uint8)
 
-        confusion_matrix, miou = get_confusion_matrix_and_miou(y_true, y_pred, num_classes=21)
+        confusion_matrix, miou = get_confusion_matrix_and_miou(y_true, y_pred, num_classes=num_classes)
         sum_confusion_matrix += confusion_matrix
 
         process_bar.set_postfix(image_id=images[i].strip(), miou="{:.4f}".format(miou))

@@ -29,7 +29,9 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
     """
 
     cbk = [
-        callbacks.ModelCheckpoint('./weights/{val_loss:.04f}.h5', save_weights_only=True),
+        callbacks.ModelCheckpoint(
+            './weights/epoch={epoch:02d}_val_loss={val_loss:.04f}_miou={val_object_miou:.04f}.h5',
+            save_weights_only=True),
     ]
 
     learning_rate = CosineAnnealingLRScheduler(2*epochs, train_steps, 1e-4, 1e-6, warmth_rate=0.1)
@@ -37,7 +39,7 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
     lr_info = print_lr(optimizer)
 
     model.compile(optimizer=optimizer,
-                  loss=dice_loss,
+                  loss=crossentropy_with_logits,
                   metrics=[object_accuracy, object_miou, lr_info])
 
     trainable_layer = 175   # resnet50
