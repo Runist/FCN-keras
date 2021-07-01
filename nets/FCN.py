@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/6/16 10:20
 # @Software: PyCharm
-# @Brief:
+# @Brief: FCN的实现
 from tensorflow.keras import layers, models
 from nets.ResNet import ResNet50_backbone
 from nets.VGG import VGG16_backbone

@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/12 16:12
 # @Software: PyCharm
-# @Brief:
+# @Brief: 训练中的评价指标
 import core.config as cfg
 from tensorflow.keras import backend, metrics, callbacks
 import tensorflow as tf

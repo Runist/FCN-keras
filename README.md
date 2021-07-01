@@ -6,9 +6,10 @@ Fully Convolutional Networks is the first model to apply Convolutional Neural Ne
 
 ### Models for this repository
 
-| Model name     | MIoU   | Pixel accuracy |
-| -------------- | ------ | -------------- |
-| FCN_8_Resnet50 | 0.4498 | 0.8992         |
+| Model name     | Dataset                | MIoU   | Pixel accuracy |
+| -------------- | ---------------------- | ------ | -------------- |
+| FCN_8_Resnet50 | VOC train dataset      | 0.4578 | 0.8993         |
+|                | VOC validation dataset | 0.751  | 0.9528         |
 
 ## Part 2. Quick  Start
 
@@ -29,7 +30,7 @@ pip installl -r requirements.txt
 4. Getting FCN weights.
 
 ```shell
-wget https://github.com/Runist/FCN-keras/releases/download/v0.1/fcn_weights.h5
+wget https://github.com/Runist/FCN-keras/releases/download/v0.2/fcn_weights.h5
 ```
 
 4. Run **predict.py**, you'll see the result of Fully Convolutional Networks.
@@ -40,11 +41,11 @@ python predict.py
 
 Input image:
 
-![inputs.jpg](https://i.loli.net/2021/06/21/H8YfZ9cQRoipJ4u.jpg)
+![2007_000822.jpg](https://i.loli.net/2021/07/01/BdkWGYVI4HNc2Ov.jpg)
 
 Output image（resize to 320 x 320）:
 
-![result.jpg](https://i.loli.net/2021/06/21/79ShFWMgrNTAXaY.jpg)
+![fcn.jpg](https://i.loli.net/2021/07/01/vEhSRBAmQWC1z3k.jpg)
 
 ## Part 3. Train your own dataset
 1. You should rewrite your data pipeline, *Dateset* where in *dataset.py* is the base class, such as  *VOCdataset.py*.
@@ -73,13 +74,13 @@ python train.py
 ```shell
 python evaluate.py
 --------------------------------------------------------------------------------
-Total MIOU: 0.4498
-Object MIOU: 0.4273
-pixel acc: 0.8992
-IOU:  [0.89913321 0.54619973 0.44859971 0.36361759 0.17900549 0.35769939
- 0.78817139 0.63222066 0.65652208 0.21874671 0.40834474 0.20701285
- 0.60411549 0.48260027 0.4556179  0.68624869 0.10174124 0.28535489
- 0.3113581  0.42726917 0.38616324]
+Total MIOU: 0.4578
+Object MIOU: 0.4357
+pixel acc: 0.8993
+IOU:  [0.89910368 0.57704284 0.42540458 0.37512895 0.20381801 0.35467035
+ 0.77999658 0.63954053 0.6688376  0.22855226 0.36980252 0.25836402
+ 0.59642955 0.48159056 0.42752974 0.67481864 0.13373938 0.33782181
+ 0.30385944 0.47929764 0.39788109]
 ```
 
 ## Part 4. Paper and other implement

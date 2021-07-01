@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/8 16:04
 # @Software: PyCharm
-# @Brief: VGG作为Backbone的FCN网络
+# @Brief: VGG Backbone
 
 from tensorflow.keras import layers, models
 from tensorflow.python.keras.utils import data_utils

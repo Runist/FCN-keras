@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/8 17:13
 # @Software: PyCharm
-# @Brief:
+# @Brief: 不同数据集的父类实现
 
 import numpy as np
 import glob

@@ -3,13 +3,12 @@
 # @Author: Runist
 # @Time : 2021/5/10 12:17
 # @Software: PyCharm
-# @Brief:
+# @Brief: voc数据集的读取脚本
 from core.dataset import Dataset
-from tensorflow.keras.applications.imagenet_utils import preprocess_input
 import numpy as np
 import random
 import tensorflow as tf
-from PIL import Image
+from PIL import Image, ImageEnhance
 import os
 import cv2 as cv
 
@@ -43,7 +42,7 @@ class VOCDataset(Dataset):
         root = os.path.split(self.annotation_path)[0]
         root = os.path.split(root)[0]
         root = os.path.split(root)[0]
-        random.shuffle(self.annotation)
+        # random.shuffle(self.annotation)
 
         for image_id in self.annotation:
             image_path = "{}/JPEGImages/{}".format(root, image_id + '.jpg')
@@ -85,6 +84,7 @@ class VOCDataset(Dataset):
         """
         image_path = self.image_info[image_id]["image_path"]
         image = cv.imread(image_path)
+        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
 
         return image
 
@@ -141,10 +141,10 @@ class VOCDataset(Dataset):
         """
         h, w, _ = image.shape
 
-        max_l_trans = 32
-        max_u_trans = 32
-        max_r_trans = w - 32
-        max_d_trans = h - 32
+        max_l_trans = w // 10
+        max_u_trans = h // 10
+        max_r_trans = w - w // 10
+        max_d_trans = h - h // 10
 
         crop_xmin = int(random.uniform(0, max_l_trans))
         crop_ymin = int(random.uniform(0, max_u_trans))
@@ -166,10 +166,10 @@ class VOCDataset(Dataset):
 
         h, w, _ = image.shape
 
-        max_l_trans = 32
-        max_u_trans = 32
-        max_r_trans = 32
-        max_d_trans = 32
+        max_l_trans = h // 10
+        max_u_trans = w // 10
+        max_r_trans = h // 10
+        max_d_trans = w // 10
 
         tx = random.uniform(-(max_l_trans - 1), (max_r_trans - 1))
         ty = random.uniform(-(max_u_trans - 1), (max_d_trans - 1))
@@ -211,47 +211,42 @@ class VOCDataset(Dataset):
 
         return image
 
-    def get_data(self):
+    def random_brightness(self, image, brightness_range):
         """
-        数据生成器
-        :return:
+        随机亮度加减
+        :param image: 输入图像
+        :param brightness_range: 亮度加减范围
+        :return: image
         """
-        num = len(self.image_info)
-        i = 0
+        image = np.array(image, np.float32) / 255
+        hsv = cv.cvtColor(image, cv.COLOR_RGB2HSV)
+        h, s, v = cv.split(hsv)
 
-        while True:
-            batch_image = []
-            batch_mask = []
+        value = random.uniform(-brightness_range, brightness_range)
 
-            if i % num == 0:
-                random.shuffle(self.image_info)
+        v += value
+        v[v > 1] = 1.
+        v[v < 0] = 0.
 
-            for _ in range(self.batch_size):
-                i %= num
-                image = self.read_image(i)
-                mask = self.read_mask(i, one_hot=False)
+        final_hsv = cv.merge((h, s, v))
+        image = cv.cvtColor(final_hsv, cv.COLOR_HSV2RGB) * 255
+        image = image.astype(np.uint8)
 
-                if random.random() < 0.5 and self.aug:
-                    image, mask = self.random_horizontal_flip(image, mask)
-                if random.random() < 0.5 and self.aug:
-                    image, mask = self.random_crop(image, mask)
-                if random.random() < 0.5 and self.aug:
-                    image, mask = self.random_translate(image, mask)
-                if random.random() < 0.5 and self.aug:
-                    image = self.color_jitter(image)
+        return image
 
-                image = self.resize_image_with_pad(image, self.target_size)
-                mask = self.resize_image_with_pad(mask, self.target_size, pad_value=0.)
+    def random_sharpness(self, image, sharp_range=3.):
+        """
+        随机锐度加强
+        :param image: 输入图像
+        :param sharp_range: 锐度加减范围
+        :return: image
+        """
+        image = Image.fromarray(image)
+        enh_sha = ImageEnhance.Sharpness(image)
+        image = enh_sha.enhance(random.uniform(-0.5, sharp_range))
+        image = np.array(image)
 
-                batch_image.append(image)
-                batch_mask.append(mask)
-                i += 1
-
-            batch_image = np.array(batch_image)
-            batch_mask = np.array(batch_mask, dtype=np.float32)
-            batch_image = preprocess_input(batch_image)
-
-            yield batch_image, batch_mask
+        return image
 
     def parse(self, index):
         """
@@ -264,18 +259,23 @@ class VOCDataset(Dataset):
             image = self.read_image(i)
             mask = self.read_mask(i, one_hot=False)
 
-            if random.random() < 0.5 and self.aug:
-                image, mask = self.random_horizontal_flip(image, mask)
-            if random.random() < 0.5 and self.aug:
-                image, mask = self.random_crop(image, mask)
-            if random.random() < 0.5 and self.aug:
-                image, mask = self.random_translate(image, mask)
-            if random.random() < 0.5 and self.aug:
-                image = self.color_jitter(image)
+            if random.random() < 0.4 and self.aug:
+                if random.random() < 0.5 and self.aug:
+                    image, mask = self.random_horizontal_flip(image, mask)
+                if random.random() < 0.5 and self.aug:
+                    image = self.color_jitter(image)
+                if random.random() < 0.5 and self.aug:
+                    image = self.random_brightness(image, brightness_range=0.3)
+                if random.random() < 0.5 and self.aug:
+                    image = self.random_sharpness(image, sharp_range=3.)
+                if random.random() < 0.5 and self.aug:
+                    image, mask = self.random_crop(image, mask)
+                if random.random() < 0.5 and self.aug:
+                    image, mask = self.random_translate(image, mask)
 
             image = self.resize_image_with_pad(image, self.target_size)
             mask = self.resize_image_with_pad(mask, self.target_size, pad_value=0.)
-            image = preprocess_input(image)
+            image -= [123.68, 116.68, 103.94]
 
             return image, mask
 
@@ -299,7 +299,7 @@ class VOCDataset(Dataset):
         dataset = dataset.repeat().batch(self.batch_size)
         dataset = dataset.prefetch(tf.data.experimental.AUTOTUNE)
         if self.aug:
-            dataset = dataset.shuffle(buffer_size=1)
+            dataset = dataset.shuffle(buffer_size=256)
 
         return dataset
 

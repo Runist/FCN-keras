@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/11 11:00
 # @Software: PyCharm
-# @Brief:
+# @Brief: 配置文件
 
 input_shape = (320, 320, 3)
 num_classes = 21

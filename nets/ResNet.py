@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/14 16:49
 # @Software: PyCharm
-# @Brief: ResNet作为Backbone的FCN网络
+# @Brief: ResNet Backbone
 
 from tensorflow.keras import layers, models, utils
 from tensorflow.python.keras.utils import data_utils

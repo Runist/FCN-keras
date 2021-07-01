@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/8 17:20
 # @Software: PyCharm
-# @Brief:
+# @Brief: 不同loss函数的实现
 import tensorflow as tf
 from tensorflow.keras import backend, losses
 

@@ -3,13 +3,11 @@
 # @Author: Runist
 # @Time : 2021/5/12 16:39
 # @Software: PyCharm
-# @Brief:
+# @Brief: 预测脚本
 import core.config as cfg
 from core.dataset import resize_image_with_pad
-from core.metrics import *
 from nets.FCN import *
 import tensorflow as tf
-from tensorflow.keras.applications.imagenet_utils import preprocess_input
 import os
 from PIL import Image
 import cv2 as cv
@@ -23,9 +21,10 @@ def inference(model, image):
     :param image:  输入图像
     :return:
     """
+    image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
     image = resize_image_with_pad(image, target_size=cfg.input_shape[:2])
     image = np.expand_dims(image, axis=0)
-    image = preprocess_input(image)
+    image -= [123.68, 116.68, 103.94]
 
     pred_mask = model.predict(image)
     pred_mask = tf.nn.softmax(pred_mask)
@@ -48,8 +47,8 @@ if __name__ == '__main__':
     # model = FCN_8_VGG16(cfg.input_shape, cfg.num_classes)
     model.load_weights("./weights/fcn_weights.h5")
 
-    image = cv.imread("D:/Code/Data/VOC2012/JPEGImages/2007_000999.jpg")
-    mask = Image.open("D:/Code/Data/VOC2012/SegmentationClass/2007_000999.png")
+    image = cv.imread("D:/Code/Data/VOC2012/JPEGImages/2007_000822.jpg")
+    mask = Image.open("D:/Code/Data/VOC2012/SegmentationClass/2007_000822.png")
     palette = mask.palette
 
     result = inference(model, image)

@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/11 9:12
 # @Software: PyCharm
-# @Brief:
+# @Brief: 训练脚本
 from tensorflow.keras import optimizers, callbacks, applications
 from core.VOCdataset import VOCDataset
 from nets.FCN import *
@@ -34,7 +34,7 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
             save_weights_only=True),
     ]
 
-    learning_rate = CosineAnnealingLRScheduler(2*epochs, train_steps, 1e-4, 1e-6, warmth_rate=0.1)
+    learning_rate = CosineAnnealingLRScheduler(2 * epochs, train_steps, 1e-4, 1e-6, warmth_rate=0.05)
     optimizer = optimizers.Adam(learning_rate)
     lr_info = print_lr(optimizer)
 
@@ -45,7 +45,6 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
     trainable_layer = 175   # resnet50
     # trainable_layer = 19    # vgg16
     for i in range(trainable_layer):
-        print(model.layers[i].name)
         model.layers[i].trainable = False
     print('freeze the first {} layers of total {} layers.'.format(trainable_layer, len(model.layers)))
 
@@ -78,7 +77,7 @@ def train_by_fit(model, epochs, train_gen, test_gen, train_steps, test_steps):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
     gpus = tf.config.experimental.list_physical_devices("GPU")
     if gpus:

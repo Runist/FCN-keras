@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/6/9 21:21
 # @Software: PyCharm
-# @Brief:
+# @Brief: lr的相关回调函数
 
 import math
 import tensorflow as tf

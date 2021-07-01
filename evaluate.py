@@ -3,7 +3,7 @@
 # @Author: Runist
 # @Time : 2021/5/19 12:13
 # @Software: PyCharm
-# @Brief:
+# @Brief: 测试miou脚本
 import numpy as np
 import os
 import core.config as cfg
@@ -23,7 +23,8 @@ def evaluate(model, val_file_path, num_classes):
     :return: None
     """
     val_dataset = VOCDataset(val_file_path, batch_size=1)
-    val_dataset = val_dataset.get_data()
+    val_dataset = val_dataset.tf_dataset()
+    val_dataset = iter(val_dataset)
 
     f = open(val_file_path, mode='r')
     images = f.readlines()
