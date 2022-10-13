@@ -23,7 +23,7 @@ git clone https://github.com/Runist/FCN-keras.git
 
 ```shell
 cd FCN-keras
-pip installl -r requirements.txt
+pip install -r requirements.txt
 ```
 
 3. Download the *[VOC](https://www.kaggle.com/huanghanchina/pascal-voc-2012)* dataset(VOC [SegmetationClassAug](http://home.bharathh.info/pubs/codes/SBD/download.html) if you need) .
